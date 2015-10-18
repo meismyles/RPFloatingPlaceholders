@@ -1,5 +1,7 @@
 ## RPFloatingPlaceholders
 
+**Fork Changes:** Various floating label frame changes to adjust label placement. Updates to textView to allow for live colour changes during editing.
+
 UITextField and UITextView subclasses with placeholders that change into floating labels when the fields are populated with text.
 
 *Used by millions of people in the Booking.com app!* Is your app using it? [Let me know!](mailto:rob@desideratalabs.co)
@@ -18,7 +20,7 @@ Support this project via Gratipay <a href="https://gratipay.com/iwasrobbed/"><im
 
 ![Downwards animation](http://i.imgur.com/DrAECwk.gif)
 
-### Supports: 
+### Supports:
 ARC & iOS 6+, Autolayout or springs and struts
 
 ### Apps using it:
@@ -28,7 +30,7 @@ ARC & iOS 6+, Autolayout or springs and struts
 ### A little help from my friends:
 Please feel free to fork and create a pull request for bug fixes or improvements, being sure to maintain the general coding style and adding comments as necessary.
 
-Thanks to the following people for their help: 
+Thanks to the following people for their help:
 
 * [Giridhar](https://github.com/gizmoboy7)
 * [Dima](https://github.com/DimaVartanian)
