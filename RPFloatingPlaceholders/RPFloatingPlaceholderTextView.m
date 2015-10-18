@@ -253,6 +253,8 @@
     // Add it to the superview so that the floating label does not
     // scroll with the text view contents
     if (self.floatingLabel.superview != self.superview) {
+        self.floatingLabel.frame = CGRectMake(self.frame.origin.x + 5.f, self.frame.origin.y,
+                                              self.frame.size.width - 10.f, self.floatingLabel.frame.size.height);
         [self.superview addSubview:self.floatingLabel];
     }
     
@@ -264,7 +266,7 @@
         [UIView animateWithDuration:0.2f delay:0.f options:options animations:^{
             self.floatingLabel.alpha = 1.f;
             if (self.animationDirection == RPFloatingPlaceholderAnimateDownward) {
-                self.frame = self.offsetTextViewFrame;
+                self.transform = CGAffineTransformMakeTranslation(0, ceil(self.floatingLabel.font.lineHeight)+3);
             } else {
                 self.floatingLabel.frame = self.offsetFloatingLabelFrame;
             }
@@ -272,7 +274,7 @@
     } else {
         self.floatingLabel.alpha = 1.f;
         if (self.animationDirection == RPFloatingPlaceholderAnimateDownward) {
-            self.frame = self.offsetTextViewFrame;
+            self.transform = CGAffineTransformMakeTranslation(0, ceil(self.floatingLabel.font.lineHeight)+3);
         } else {
             self.floatingLabel.frame = self.offsetFloatingLabelFrame;
         }
@@ -285,7 +287,7 @@
     [UIView animateWithDuration:0.2f delay:0.f options:options animations:^{
         self.floatingLabel.alpha = 0.f;
         if (self.animationDirection == RPFloatingPlaceholderAnimateDownward) {
-            self.frame = self.originalTextViewFrame;
+            self.transform = CGAffineTransformMakeTranslation(0, 0);
         } else {
             self.floatingLabel.frame = self.originalFloatingLabelFrame;
         }
@@ -313,7 +315,6 @@
     
     self.originalFloatingLabelFrame = CGRectMake(self.originalTextViewFrame.origin.x + 5.f, self.originalTextViewFrame.origin.y,
                                                  self.originalTextViewFrame.size.width - 10.f, self.floatingLabel.frame.size.height);
-    self.floatingLabel.frame = self.originalFloatingLabelFrame;
     
     self.offsetFloatingLabelFrame = CGRectMake(self.originalFloatingLabelFrame.origin.x, self.originalFloatingLabelFrame.origin.y - offset,
                                            self.originalFloatingLabelFrame.size.width, self.originalFloatingLabelFrame.size.height);
@@ -362,6 +363,15 @@
         } else {
             [self showFloatingLabelWithAnimation:YES];
         }
+    }
+
+    // Needed to change colour during text edit (not needed for text field)
+    if (self.floatingLabel.textColor != self.floatingLabelActiveTextColor) {
+        __weak __typeof(self) weakSelf = self;
+        [self animateFloatingLabelColorChangeWithAnimationBlock:^{
+            __strong __typeof(weakSelf) strongSelf = weakSelf;
+            self.floatingLabel.textColor = strongSelf.floatingLabelActiveTextColor;
+        }];
     }
 }
 

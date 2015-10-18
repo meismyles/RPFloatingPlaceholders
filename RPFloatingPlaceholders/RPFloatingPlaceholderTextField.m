@@ -158,11 +158,6 @@
     self.floatingLabel.backgroundColor = [UIColor clearColor];
     self.floatingLabel.alpha = 1.f;
     
-    // Adjust the top margin of the text field and then cache the original
-    // view frame
-    self.originalTextFieldFrame = UIEdgeInsetsInsetRect(self.frame, UIEdgeInsetsMake(5.f, 0.f, 2.f, 0.f));
-    self.frame = self.originalTextFieldFrame;
-    
     // Set the background to a clear color
     self.backgroundColor = [UIColor clearColor];
 }
@@ -239,6 +234,8 @@
 {
     // Add it to the superview
     if (self.floatingLabel.superview != self.superview) {
+        self.floatingLabel.frame = CGRectMake(self.frame.origin.x + 5.f, self.frame.origin.y,
+                                              self.frame.size.width - 10.f, self.floatingLabel.frame.size.height);
         [self.superview addSubview:self.floatingLabel];
     }
     
@@ -250,7 +247,7 @@
         [UIView animateWithDuration:0.2f delay:0.f options:options animations:^{
             self.floatingLabel.alpha = 1.f;
             if (self.animationDirection == RPFloatingPlaceholderAnimateDownward) {
-                self.frame = self.offsetTextFieldFrame;
+                self.transform = CGAffineTransformMakeTranslation(0, ceil(self.floatingLabel.font.lineHeight)-4);
             } else {
                 self.floatingLabel.frame = self.offsetFloatingLabelFrame;
             }
@@ -258,7 +255,7 @@
     } else {
         self.floatingLabel.alpha = 1.f;
         if (self.animationDirection == RPFloatingPlaceholderAnimateDownward) {
-            self.frame = self.offsetTextFieldFrame;
+            self.transform = CGAffineTransformMakeTranslation(0, ceil(self.floatingLabel.font.lineHeight)-4);
         } else {
             self.floatingLabel.frame = self.offsetFloatingLabelFrame;
         }
@@ -271,7 +268,7 @@
     [UIView animateWithDuration:0.2f delay:0.f options:options animations:^{
         self.floatingLabel.alpha = 0.f;
         if (self.animationDirection == RPFloatingPlaceholderAnimateDownward) {
-            self.frame = self.originalTextFieldFrame;
+            self.transform = CGAffineTransformMakeTranslation(0, 0);
         } else {
             self.floatingLabel.frame = self.originalFloatingLabelFrame;
         }
@@ -295,11 +292,15 @@
 {
     [self.floatingLabel sizeToFit];
     
+    // Adjust the top margin of the text field and then cache the original
+    // view frame
+    self.originalTextFieldFrame = UIEdgeInsetsInsetRect(self.frame, UIEdgeInsetsMake(5.f, 0.f, 2.f, 0.f));
+    self.frame = self.originalTextFieldFrame;
+    
     CGFloat offset = ceil(self.floatingLabel.font.lineHeight);
     
     self.originalFloatingLabelFrame = CGRectMake(self.originalTextFieldFrame.origin.x + 5.f, self.originalTextFieldFrame.origin.y,
                                                  self.originalTextFieldFrame.size.width - 10.f, self.floatingLabel.frame.size.height);
-    self.floatingLabel.frame = self.originalFloatingLabelFrame;
     
     self.offsetFloatingLabelFrame = CGRectMake(self.originalFloatingLabelFrame.origin.x, self.originalFloatingLabelFrame.origin.y - offset,
                                                self.originalFloatingLabelFrame.size.width, self.originalFloatingLabelFrame.size.height);
